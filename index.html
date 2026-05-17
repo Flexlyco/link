@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Radius - Weiterleitung</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 40px;
+    }
+
+    button {
+      background-color: #007aff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 12px 24px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    #counter {
+      font-size: 18px;
+      margin-top: 20px;
+    }
+
+    #kycPage {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="kycPage">
+    <h2>Weiter in der App</h2>
+    <p>Die App wird automatisch in <span id="counter">10</span> Sekunden geöffnet.</p>
+    <button id="openApp">In der App öffnen</button>
+  </div>
+
+<script>
+  const query = window.location.search.replace("?", "").trim();
+
+  if (query === "/kyc-complete" || query === "/tabs/home") {
+    document.getElementById("kycPage").style.display = "block";
+
+    const BUTTON = document.getElementById('openApp');
+    const COUNTER_EL = document.getElementById('counter');
+  let DEEPLINK = null;
+  if (query === "/kyc-complete") {
+   DEEPLINK = "radius://kyc-complete";
+  } else if (query === "/tabs/home") {
+    DEEPLINK = "radius://tabs/home";
+  } 
+
+    let counter = 10;
+
+    const interval = setInterval(() => {
+      counter--;
+      COUNTER_EL.textContent = counter;
+      if(counter <= 0){
+        clearInterval(interval);
+        openApp();
+      }
+    }, 1000);
+
+    function openApp(){
+      window.location.href = DEEPLINK;
+    }
+
+    BUTTON.addEventListener('click', openApp);
+  }
+</script>
+
+</body>
+</html>
